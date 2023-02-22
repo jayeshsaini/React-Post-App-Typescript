@@ -1,15 +1,19 @@
 import axios from "axios";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 
 type API = {
   success: boolean;
   payload: any;
 };
 
-const apiCall = createContext<API[]>([]);
+type Props = {
+  children: ReactNode;
+};
 
-function JsonAPI() {
-  const [data, setData] = useState<API[]>([]);
+export const apiCall = createContext<API>({ success: false, payload: [] });
+
+function JsonAPI({ children }: Props) {
+  const [data, setData] = useState<API>({ success: false, payload: [] });
 
   const sendGetRequest = async () => {
     try {
@@ -27,11 +31,7 @@ function JsonAPI() {
     sendGetRequest();
   }, []);
 
-  return (
-    <apiCall.Provider value={data}>
-      <div>JsonAPI</div>;
-    </apiCall.Provider>
-  );
+  return <apiCall.Provider value={data}>{children}</apiCall.Provider>;
 }
 
-export default { JsonAPI, apiCall };
+export default JsonAPI;
